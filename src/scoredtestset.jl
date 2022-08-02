@@ -98,9 +98,8 @@ function stats(ts::ScoredTestSet)
 end
 
 function _print_impl(io::IO, ts::ScoredTestSet, count::Integer=0)
-    if count == 0
-        println("No.   Result  Score  [Name]  [Error]")
-    end
+    washeader = false
+
     !isempty(ts.description) && println(io, ts.description)
 
     for t in ts.tests
@@ -109,6 +108,9 @@ function _print_impl(io::IO, ts::ScoredTestSet, count::Integer=0)
             count += _print_impl(io, t, count)
             continue
         end
+
+        !washeader && println("No.   Result  Score  [Name]  [Error]")
+        washeader = true
 
         count += 1
         resultchar = "N/A"
