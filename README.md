@@ -3,7 +3,7 @@
 ScoredTests.jl is a tiny package providing
 
 - `@scoredtest expr [award] [penalty] [name]` macro;
-- `ScoredTestSet([description])`.
+- and `ScoredTestSet([description])`.
 
 The macro evaluates an expression giving result of the test: was it passed, failed or errored during testing.
 
