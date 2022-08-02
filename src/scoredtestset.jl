@@ -147,10 +147,10 @@ function printsummary(io::IO, ts::ScoredTestSet, stat::ScoredTestSetStats=stats(
     _print_impl(io, ts)
     println(io)
     println(io, "Summary")
-    print(io, "  Passed $(stat.passed) tests of $(stat.count) [$(percentage(stat.passed, stat.count))]")
-    stat.errored > 0 && print(io, " and $(stat.errored) of tests throws exceptions")
+    print(io, "  Passed $(stat.passed) test(s) of $(stat.count) [$(percentage(stat.passed, stat.count))]")
+    stat.errored > 0 && print(io, " and $(stat.errored) of test(s) throw(s) exception(s)")
     println(io)
-    println(io, "  Achieved $(stat.score) points of $(stat.maxscore) [$(percentage(stat.score, stat.maxscore))]")
+    println(io, "  Achieved $(stat.score) point(s) of $(stat.maxscore) [$(percentage(stat.score, stat.maxscore))]")
     return nothing
 end
 
