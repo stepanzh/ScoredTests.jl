@@ -11,7 +11,7 @@ When a test is passed, it gives `award`, when failed or errored it takes `penalt
 
 Tests (and testsets) can be grouped into `ScoredTestSet`-s via `*=` orepand.
 
-## MVE
+## MWE
 
 ```julia-repl
 julia> using ScoredTests
