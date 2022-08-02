@@ -2,7 +2,7 @@ module ScoredTests
 
 export @scoredtest
 export ScoredTestSet
-export printsummary
+export printsummary, stats
 
 using Printf
 

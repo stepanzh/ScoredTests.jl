@@ -12,7 +12,7 @@ struct ScoredTest{R,S,T}
     name::S
 end
 
-ispassed(t::ScoredTest) = t.result.passed
+ispass(t::ScoredTest) = t.result.passed
 isfail(t::ScoredTest) = !t.result.passed && isnothing(t.result.exception)
 iserror(t::ScoredTest) = !t.result.passed && !isnothing(t.result.exception)
 score(t::ScoredTest) = t.result.passed ? t.award : t.penalty
@@ -28,9 +28,25 @@ function Base.showerror(io::IO, e::ScoredTestException)
 end
 
 """
-    @scoredtest expr [name=""] [award=1] [penalty=1]
+    @scoredtest expr [name=""] [award=1] [penalty=1] -> ScoredTests.ScoredTest
+    @scoredtest(expr[, name="", award=1, penalty=1]) -> ScoredTests.ScoredTest
 
-Evaluates `expr`ession and returns [`ScoredTest`](@ref).
+Evaluates boolean `expr`ession and returns [`ScoredTest`](@ref).
+
+[`ScoredTest`](@ref) can have `name` (should be string), `award` and `penalty` (should be `Real`s).
+
+[`ScoredTest`](@ref) can have one of three result types
+
+- Passed: test is passed and gives `award`;
+- Failed: test is failed and takes `penalty`;
+- Errored: test throws error and takes `penalty`.
+
+Status of test can be checked by [`ScoredTests.ispass`](@ref),
+[`ScoredTests.isfail`](@ref) and [`ScoredTests.iserror`](@ref).
+
+Achived score accesible by [`ScoredTests.score`](@ref).
+
+Macro throws [`ScoredTests.ScoredTestException`](@ref) when `expr` returns not `Bool`.
 """
 macro scoredtest(expr, kwargs...)
     award = 1

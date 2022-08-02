@@ -1,3 +1,20 @@
+"""
+    ScoredTestSet([description])
+
+Collection of [`ScoredTest`](@ref)s and [`ScoredTestSet`](@ref)s.
+
+For adding new tests or testsets, use `*=` operand, e.g.
+
+```julia
+ts2 = ScoredTestSet("Subgroup of tests")
+ts2 *= @scoredtest π < 3
+ts2 *= @scoredtest π ≈ 3.1415
+
+ts = ScoredTestSet("Main group")
+ts *= @scoredtest 1 + 1 == 2
+ts *= ts2
+```
+"""
 struct ScoredTestSet{S}
     description::S
     tests::Vector{Union{ScoredTest,ScoredTestSet}}
@@ -11,7 +28,13 @@ record(ts::ScoredTestSet, ts2::ScoredTestSet) = push!(ts.tests, ts2)
 Base.:*(ts::ScoredTestSet, t::ScoredTest) = begin record(ts, t); return ts end
 Base.:*(ts::ScoredTestSet, t::ScoredTestSet) = begin record(ts, t); return ts end
 
+"""
+    ScoredTests.ScoredTestSetStats(args...)
 
+Statistics of a testset.
+
+Fields: `count`, `passed`, `failed`, `errored`, `score` and `maxscore`.
+"""
 struct ScoredTestSetStats{I,F}
     count::I
     passed::I
@@ -31,6 +54,11 @@ function Base.show(io::IO, s::ScoredTestSetStats)
       print(io, "  Max score: ", s.maxscore)
 end
 
+"""
+    stats(testset::ScoredTestSet) -> ScoredTests.ScoredTestSetStats
+
+Calculate statistics of `testset`.
+"""
 function stats(ts::ScoredTestSet)
     count = passed = failed = errored = 0
     currscore = maxscore = 0
@@ -51,7 +79,7 @@ function stats(ts::ScoredTestSet)
         currscore += score(t)
         maxscore += t.award
 
-        if ispassed(t)
+        if ispass(t)
             passed += 1
         elseif isfail(t)
             failed += 1
@@ -84,7 +112,7 @@ function _print_impl(io::IO, ts::ScoredTestSet, count::Integer=0)
 
         count += 1
         resultchar = "N/A"
-        if ispassed(t)
+        if ispass(t)
             resultchar = "✓"
             color = :green
         elseif isfail(t)
@@ -106,6 +134,11 @@ function _print_impl(io::IO, ts::ScoredTestSet, count::Integer=0)
     return count
 end
 
+"""
+    printsummary([io::IO=stdout, ]testset::ScoredTestSet[, stat::ScoredTestSetStats=stats(ts)])
+
+Print `testset` results and `stat`istics to `io`.
+"""
 function printsummary(io::IO, ts::ScoredTestSet, stat::ScoredTestSetStats=stats(ts))
     percentage(x, m) = "$(round(100 * x / m; digits=1))%"
 
