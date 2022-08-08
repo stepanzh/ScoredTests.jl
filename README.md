@@ -49,6 +49,7 @@ Summary
 
 ## TODO
 
-- Test macro stability
-- Localization facilitites
-- Add use cases to readme
+- [ ] Test macro stability
+- [ ] Localization facilitites
+- [ ] Add use cases to readme
+- [ ] Tag v0.1.0
