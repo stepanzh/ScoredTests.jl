@@ -46,3 +46,9 @@ Summary
   Passed 2 test(s) of 6 [33.3%] and 2 of test(s) throw(s) exception(s)
   Achieved 1 point(s) of 10 [10.0%]
 ```
+
+## TODO
+
+- Test macro stability
+- Localization facilitites
+- Add use cases to readme
