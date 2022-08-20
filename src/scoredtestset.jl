@@ -97,7 +97,7 @@ function stats(ts::ScoredTestSet)
     )
 end
 
-function _print_impl(io::IO, ts::ScoredTestSet, count::Integer=0)
+function printresults(io::IO, ts::ScoredTestSet, count::Integer=0)
     washeader = false
 
     !isempty(ts.description) && println(io, ts.description)
@@ -105,7 +105,7 @@ function _print_impl(io::IO, ts::ScoredTestSet, count::Integer=0)
     for t in ts.tests
         if t isa ScoredTestSet
             println()
-            count += _print_impl(io, t, count)
+            count += printresults(io, t, count)
             continue
         end
 
@@ -144,13 +144,14 @@ Print `testset` results and `stat`istics to `io`.
 function printsummary(io::IO, ts::ScoredTestSet, stat::ScoredTestSetStats=stats(ts))
     percentage(x, m) = "$(round(100 * x / m; digits=1))%"
 
-    _print_impl(io, ts)
+    println("Results")
+    printresults(io, ts)
     println(io)
     println(io, "Summary")
-    print(io, "  Passed $(stat.passed) test(s) of $(stat.count) [$(percentage(stat.passed, stat.count))]")
-    stat.errored > 0 && print(io, " and $(stat.errored) of test(s) throw(s) exception(s)")
+    print(io, "  Passed $(stat.passed) test$(stat.passed == 1 ? "" : "s") of $(stat.count) [$(percentage(stat.passed, stat.count))]")
+    stat.errored > 0 && print(io, " and $(stat.errored) test$(stat.errored == 1 ? "" : "s") throw$(stat.errored == 1 ? "s" : "") exception(s)")
     println(io)
-    println(io, "  Achieved $(stat.score) point(s) of $(stat.maxscore) [$(percentage(stat.score, stat.maxscore))]")
+    println(io, "  Achieved $(stat.score) point$(stat.score == 1 ? "" : "s") of $(stat.maxscore) [$(percentage(stat.score, stat.maxscore))]")
     return nothing
 end
 
