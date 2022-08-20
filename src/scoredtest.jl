@@ -28,29 +28,46 @@ function Base.showerror(io::IO, e::ScoredTestException)
 end
 
 """
-    @scoredtest expr [name=""] [award=1] [penalty=1] -> ScoredTests.ScoredTest
-    @scoredtest(expr[, name="", award=1, penalty=1]) -> ScoredTests.ScoredTest
+    @scoredtest expr [name=""] [award=DefaultScoring.award] [penalty=DefaultScoring.penalty] -> ScoredTests.ScoredTest
+    @scoredtest(expr[, name="", award=DefaultScoring.award, penalty=DefaultScoring.penalty]) -> ScoredTests.ScoredTest
 
-Evaluates boolean `expr`ession and returns [`ScoredTest`](@ref).
+Evaluates boolean `expr`ession and returns [`ScoredTest`](@ref),
+throws [`ScoredTests.ScoredTestException`](@ref) when `expr` returns not `Bool`.
 
-[`ScoredTest`](@ref) can have `name` (should be string), `award` and `penalty` (should be `Real`s).
+[`ScoredTest`](@ref) has `name` (should be string), `award` and `penalty` (should be *positive* `Real`s).
 
-[`ScoredTest`](@ref) can have one of three result types
+A [`ScoredTest`](@ref) can be
 
-- Passed: test is passed and gives `award`;
-- Failed: test is failed and takes `penalty`;
-- Errored: test throws error and takes `penalty`.
+- Passed: `expr` is `true`, test gives `award`;
+- Failed: `expr` is `false`, test takes `penalty`;
+- Errored: `expr` throws error, test takes `penalty`.
 
 Status of test can be checked by [`ScoredTests.ispass`](@ref),
 [`ScoredTests.isfail`](@ref) and [`ScoredTests.iserror`](@ref).
 
 Achived score accesible by [`ScoredTests.score`](@ref).
 
-Macro throws [`ScoredTests.ScoredTestException`](@ref) when `expr` returns not `Bool`.
+# Example
+
+```julia-repl
+julia> st = @scoredtest π < 3 award=2 penalty=4;
+
+julia> ScoredTests.ispass(st)
+false
+
+julia> ScoredTests.isfail(st)
+true
+
+julia> ScoredTests.iserror(st)
+false
+
+julia> ScoredTests.score(st)
+-4
+```
 """
 macro scoredtest(expr, kwargs...)
-    award = 1
-    penalty = 1
+    award = DefaultScoring.award
+    penalty = DefaultScoring.penalty
     name = ""
 
     for kw in kwargs
