@@ -48,6 +48,39 @@ end
         ts *= ScoredTestSet()
         @test length(ts.tests) == 2
     end
+
+    @testset "Statistics" begin
+        tsoutter = ScoredTestSet()
+        tsinner = ScoredTestSet()
+        tsinner *= @scoredtest 1 + 1 == 2
+        tsinner *= @scoredtest 1 + 2 == 2
+        tsinner *= @scoredtest 1 + x == 2
+        tsoutter *= tsinner
+        tsoutter *= @scoredtest 1 + 1 == 2
+
+        award = ScoredTests.DefaultScoring.award
+        penalty = ScoredTests.DefaultScoring.penalty
+
+        @testset "Testset depth 1" begin
+            statinner = ScoredTests.stats(tsinner)
+            @test statinner.count == 3
+            @test statinner.passed == 1
+            @test statinner.failed == 1
+            @test statinner.errored == 1
+            @test statinner.score == award - 2 * penalty
+            @test statinner.maxscore == 3 * award
+        end
+
+        @testset "Testset depth 2" begin
+            statoutter = ScoredTests.stats(tsoutter)
+            @test statoutter.count == 4
+            @test statoutter.passed == 2
+            @test statoutter.failed == 1
+            @test statoutter.errored == 1
+            @test statoutter.score == 2 * award - 2 * penalty
+            @test statoutter.maxscore == 4 * award
+        end
+    end
 end
 
 end # @testset
