@@ -1,7 +1,7 @@
 name = "ScoredTests"
 uuid = "f38cd097-35c0-4a4d-abf7-36f5cb14a6cb"
 authors = ["Stepan Zakharov <stepanzh@gmail.com>"]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
