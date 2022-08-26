@@ -105,7 +105,7 @@ function printresults(io::IO, ts::ScoredTestSet, count::Integer=0)
     for t in ts.tests
         if t isa ScoredTestSet
             println()
-            count += printresults(io, t, count)
+            count = printresults(io, t, count)
             continue
         end
 
