@@ -32,6 +32,9 @@ ST = ScoredTests
     @testset "Arguments" begin
         res = ST.ScoredTest(ST.Result(true, nothing), 10, -10, "Foo")
         @test @scoredtest(1 + 1 == 2, name="Foo", award=10, penalty=10) == res
+
+        award, penalty, name = 10, 10, "Foo"
+        @test @scoredtest(1 + 1 == 2, name=name, award=award, penalty=penalty) == res
     end
 end
 

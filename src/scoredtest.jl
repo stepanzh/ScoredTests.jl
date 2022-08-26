@@ -83,12 +83,17 @@ macro scoredtest(expr, kwargs...)
     end
 
     return quote
+        # Macro Arguments
+        a = $(esc(award))
+        p = $(esc(penalty))
+        n = $(esc(name))
+
         try
             result = $(esc(expr))
             if result isa Bool
                 (
-                    result ? ScoredTest(Result(true), $award, -$penalty, $name)
-                           : ScoredTest(Result(false), $award, -$penalty, $name)
+                    result ? ScoredTest(Result(true), a, -p, n)
+                           : ScoredTest(Result(false), a, -p, n)
                 )
             else
                 throw(ScoredTestException("The tested expression returns non-Boolean", $(string(expr))))
@@ -97,7 +102,7 @@ macro scoredtest(expr, kwargs...)
             if e isa ScoredTestException
                 rethrow(e)
             end
-            ScoredTest(Result(false, e), $award, -$penalty, $name)
+            ScoredTest(Result(false, e), a, -p, n)
         end
     end
 end
