@@ -47,9 +47,14 @@ Summary
   Achieved 1 point(s) of 10 [10.0%]
 ```
 
-## TODO
+## Use case
 
-- [ ] Test macro stability
-- [ ] Localization facilitites
-- [ ] Add use cases to readme
-- [ ] Tag v0.1.0
+Originally, the package is supposed to be used by teachers and student in the following manner
+
+Teacher perspective
+
+- Create a repo (or template) of package, containing task and scored testset.
+
+Student perspective
+
+- Clone the repo, complete task, check score via `julia --project=Project.toml test/runtests.jl` or from REPL `pkg>` mode.
